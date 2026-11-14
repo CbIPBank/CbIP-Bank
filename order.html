@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Заказать карту — CbIP банк</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      font-family: Arial, sans-serif;
+      background: #fff8df;
+      color: #49351e;
+    }
+
+    .container {
+      max-width: 550px;
+      margin: auto;
+      background: #fff0bd;
+      padding: 30px;
+      border-radius: 18px;
+    }
+
+    h1, h2 { text-align: center; }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px;
+      margin-top: 8px;
+      border: 1px solid #d7b76e;
+      border-radius: 9px;
+      font-size: 16px;
+      background: white;
+    }
+
+    .preview {
+      background: linear-gradient(135deg, #ffda62, #f4a928);
+      border-radius: 18px;
+      padding: 25px;
+      margin: 25px 0;
+      min-height: 170px;
+      box-shadow: 0 5px 12px #0002;
+    }
+
+    .preview h2 {
+      text-align: left;
+      margin-bottom: 35px;
+    }
+
+    .preview .chip { font-size: 28px; }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 15px;
+      background: #e9a928;
+      color: #38250e;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover { background: #f5bd49; }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #49351e;
+    }
+
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      line-height: 1.6;
+    }
+
+    .notice {
+      font-size: 13px;
+      color: #80602e;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🧀 CbIP банк</h1>
+    <h2>Заказ сырной карты</h2>
+
+    <div class="preview">
+      <h2>CbIP банк</h2>
+      <div class="chip">▦</div>
+      <p id="cardDesign">🧀 Сырная карта</p>
+    </div>
+
+    <form id="orderForm">
+      <label for="name">Как тебя зовут?</label>
+      <input id="name" type="text" placeholder="Например, Чеддерыч" required>
+
+      <label for="design">Выбери дизайн карты</label>
+      <select id="design">
+        <option value="🧀 Швейцарский сыр">Швейцарский сыр</option>
+        <option value="🧀 Сырные палочки">Сырные палочки</option>
+        <option value="🍕 Моцарелла">Моцарелла</option>
+        <option value="🐭 Мультяшный сыр">Мультяшный сыр</option>
+      </select>
+
+      <label for="color">Цвет карты</label>
+      <select id="color">
+        <option>Жёлтый</option>
+        <option>Оранжевый</option>
+        <option>Кремовый</option>
+      </select>
+
+      <button type="submit">🧀 Заказать карту</button>
+    </form>
+
+    <div id="result"></div>
+
+    <p class="notice">
+      Это шуточная демонстрация. Настоящие банковские данные не нужны.
+      Заявка никуда не отправляется.
+    </p>
+
+    <a class="back" href="index.html">← Вернуться на главную</a>
+  </div>
+
+  <script>
+    const design = document.getElementById("design");
+    const cardDesign = document.getElementById("cardDesign");
+
+    design.addEventListener("change", function() {
+      cardDesign.textContent = design.value;
+    });
+
+    document.getElementById("orderForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const color = document.getElementById("color").value;
+
+      document.getElementById("result").innerHTML =
+        "🎉 Поздравляем, " + escapeText(name) + "!<br>" +
+        "Твоя виртуальная заявка принята!<br>" +
+        "Дизайн: " + escapeText(design.value) + "<br>" +
+        "Цвет: " + escapeText(color) + "<br>" +
+        "🧀 Да здравствует сыр!";
+    });
+
+    function escapeText(value) {
+      const div = document.createElement("div");
+      div.textContent = value;
+      return div.innerHTML;
+    }
+  </script>
+
+</body>
+</html>
+

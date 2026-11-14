@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Отзывы — CbIP банк</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      font-family: Arial, sans-serif;
+      background: #fff8df;
+      color: #49351e;
+    }
+
+    .container {
+      max-width: 750px;
+      margin: auto;
+    }
+
+    h1, h2 { text-align: center; }
+
+    .review {
+      background: #fff0bd;
+      padding: 20px;
+      border-radius: 13px;
+      margin: 15px 0;
+    }
+
+    .review h3 { margin-top: 0; }
+
+    .tag {
+      font-size: 12px;
+      color: #80602e;
+    }
+
+    form {
+      background: #ffedaa;
+      padding: 25px;
+      border-radius: 15px;
+      margin-top: 35px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 7px;
+      border: 1px solid #d7b76e;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      background: #e9a928;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    a { color: #49351e; }
+
+    .notice {
+      font-size: 13px;
+      color: #80602e;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>⭐ Отзывы о CbIP банке</h1>
+    <p style="text-align:center">Мнение наших вымышленных клиентов 🧀</p>
+
+    <div id="reviews">
+      <div class="review">
+        <h3>🐭 Мистер Мышь</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Лучший банк! Теперь храню сыр только здесь.</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>👑 Сырный король</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Очень сырно, очень удобно. Одобряю!</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🍕 Пицца Мастер</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Моцарелла на высшем уровне. 10 из 10!</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🐱 Кот Матроскин</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Молоко есть, сыр есть, банк есть. Всё отлично!</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🥖 Багетыч</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Сырная карта идеально подходит к моему багету.</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🧀 Моцарелла 3000</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Тянется лучше, чем мои дедлайны.</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🐹 Хомяк Борис</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Накопил целую гору воображаемого сыра!</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>👨‍🍳 Шеф Повар</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Одобряю сырный сервис. Пять звёзд!</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🐼 Панда Чиз</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Теперь мой любимый банк — сырный банк.</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🦊 Лисёнок</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Очень вкусный дизайн сайта. Рекомендую!</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🍔 Бургермен</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Сырная карта — главный ингредиент успеха.</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🐸 Жабыч</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Ква-классный банк!</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🧀 Чеддермен</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Чеддер одобряет. Вопросов нет.</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>🐻 Медведь Топтыгин</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>Сырный запас теперь под надёжной защитой!</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+
+      <div class="review">
+        <h3>👽 Инопланетянин X-55</h3>
+        <p>⭐⭐⭐⭐⭐</p>
+        <p>На моей планете такого банка ещё не придумали.</p>
+        <div class="tag">Вымышленный отзыв</div>
+      </div>
+    </div>
+
+    <form id="reviewForm">
+      <h2>Оставить отзыв</h2>
+
+      <label for="name">Имя</label>
+      <input id="name" type="text" placeholder="Твоё имя" required>
+
+      <label for="rating">Оценка</label>
+      <select id="rating">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+      </select>
+
+      <label for="message">Твой отзыв</label>
+      <textarea id="message" rows="4" placeholder="Напиши что-нибудь сырное..." required></textarea>
+
+      <button type="submit">Опубликовать отзыв</button>
+      <p class="notice">Отзывы, добавленные здесь, сохраняются только в этом браузере.</p>
+    </form>
+
+    <p style="text-align:center; margin-top:30px">
+      <a href="index.html">← На главную</a>
+    </p>
+  </div>
+
+  <script>
+    const reviews = document.getElementById("reviews");
+
+    function escapeText(value) {
+      const div = document.createElement("div");
+      div.textContent = value;
+      return div.innerHTML;
+    }
+
+    const savedReviews = JSON.parse(localStorage.getItem("cbipReviews") || "[]");
+
+    function showReview(review) {
+      const item = document.createElement("div");
+      item.className = "review";
+
+      const heading = document.createElement("h3");
+      heading.textContent = "🧀 " + review.name;
+
+      const rating = document.createElement("p");
+      rating.textContent = "⭐".repeat(review.rating);
+
+      const message = document.createElement("p");
+      message.textContent = review.message;
+
+      const tag = document.createElement("div");
+      tag.className = "tag";
+      tag.textContent = "Отзыв посетителя";
+
+      item.append(heading, rating, message, tag);
+      reviews.appendChild(item);
+    }
+
+    savedReviews.forEach(showReview);
+
+    document.getElementById("reviewForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const review = {
+        name: document.getElementById("name").value.trim(),
+        rating: Number(document.getElementById("rating").value),
+        message: document.getElementById("message").value.trim()
+      };
+
+      if (!review.name || !review.message) return;
+
+      savedReviews.push(review);
+      localStorage.setItem("cbipReviews", JSON.stringify(savedReviews));
+      showReview(review);
+
+      this.reset();
+      alert("Спасибо за сырный отзыв! 🧀");
+    });
+  </script>
+
+</body>
+</html>
+
