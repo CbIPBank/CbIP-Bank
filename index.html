@@ -1,237 +1,270 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CbIP банк — Главная</title>
-
+  <title>CbIP Банк — Сырники</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #fff9e8;
-      color: #49320c;
+      background: #fff8e8;
+      color: #392b18;
     }
-
     header {
-      background: #ffdf63;
-      padding: 25px 20px;
+      background: #f2c75c;
+      padding: 22px 16px;
       text-align: center;
     }
-
-    header h1 {
-      margin: 0;
-      font-size: 36px;
-    }
-
-    header p {
-      margin-bottom: 0;
-      font-size: 17px;
-    }
-
-    nav {
-      background: #49320c;
-      padding: 15px;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 25px;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      color: #ffdf63;
-    }
-
-    section {
-      padding: 45px 20px;
-      text-align: center;
-    }
-
-    .intro {
-      max-width: 750px;
-      margin: auto;
-    }
-
-    .intro h2 {
-      font-size: 30px;
-    }
-
-    .intro p {
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    .features {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-top: 30px;
-    }
-
-    .feature {
+    header h1 { margin: 0 0 12px; }
+    nav { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; }
+    a { color: #593d12; font-weight: bold; }
+    main { max-width: 850px; margin: 25px auto; padding: 0 16px; }
+    section, .panel {
       background: white;
       padding: 22px;
-      border-radius: 15px;
-      width: 220px;
-      box-shadow: 0 4px 12px rgba(80, 55, 10, 0.10);
+      border-radius: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 12px #00000012;
     }
-
-    .feature h3 {
-      margin-top: 5px;
+    h2 { margin-top: 0; }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 7px 0;
+      border-radius: 9px;
+      font-size: 16px;
     }
-
-    .card-showcase {
-      background: #fff1bd;
+    input { border: 1px solid #d5c49e; }
+    button {
+      border: 0;
+      background: #e9b83f;
+      color: #38280b;
+      font-weight: bold;
+      cursor: pointer;
     }
-
+    button:hover { background: #f4ca60; }
+    .secondary { background: #eee6d4; }
+    .hidden { display: none; }
+    .balance {
+      font-size: 34px;
+      font-weight: bold;
+      color: #a56b00;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .muted { color: #766d5d; font-size: 14px; }
     .card-image {
       display: block;
-      width: 750px;
-      max-width: 95%;
-      height: auto;
-      margin: 30px auto;
-      border-radius: 22px;
-      box-shadow: 0 12px 25px rgba(80, 55, 10, 0.25);
+      max-width: 300px;
+      width: 100%;
+      margin: 18px auto;
+      border-radius: 14px;
     }
-
-    .card-button,
-    .main-button {
-      display: inline-block;
-      background: #49320c;
-      color: white;
-      padding: 14px 25px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-top: 15px;
-    }
-
-    .card-button:hover,
-    .main-button:hover {
-      background: #76521b;
-    }
-
     footer {
-      background: #49320c;
-      color: white;
+      background: #f2c75c;
+      padding: 22px;
       text-align: center;
-      padding: 25px 15px;
-      margin-top: 30px;
+      line-height: 1.8;
     }
-
-    footer a {
-      color: #ffdf63;
-      text-decoration: none;
-      margin: 0 10px;
-    }
-
-    @media (max-width: 450px) {
-      header h1 {
-        font-size: 29px;
-      }
-
-      nav {
-        gap: 15px;
-      }
-    }
+    #message { white-space: pre-wrap; }
   </style>
 </head>
-
 <body>
 
-  <header id="home">
-    <h1>🧀 CbIP банк</h1>
-    <p>Просто. Удобно. Сырно.</p>
-  </header>
-
+<header>
+  <h1>🧀 CbIP БАНК</h1>
+  <p>Твой любимый сырный банк!</p>
   <nav>
-    <a href="#home">Главная</a>
-    <a href="#about">О нас</a>
-    <a href="#my-card">Карты</a>
+    <a href="index.html">Главная</a>
+    <a href="order.html">Заказать карту</a>
     <a href="reviews.html">Отзывы</a>
     <a href="authors.html">Авторы</a>
   </nav>
+</header>
 
-  <section class="intro" id="about">
-    <h2>Добро пожаловать в CbIP банк!</h2>
-
-    <p>
-      CbIP банк — самый сырный банк в интернете!
-      У нас всё просто, удобно и по-настоящему сырно.
-      Выбирай дизайн карты и присоединяйся к нашей сырной команде!
-    </p>
-
-    <div class="features">
-
-      <div class="feature">
-        <h3>🧀 Сырный стиль</h3>
-        <p>Уникальный дизайн для любителей сыра.</p>
-      </div>
-
-      <div class="feature">
-        <h3>💳 Красивые карты</h3>
-        <p>Выбирай карту по своему вкусу.</p>
-      </div>
-
-      <div class="feature">
-        <h3>⭐ Удобство</h3>
-        <p>Всё находится в одном месте.</p>
-      </div>
-
-    </div>
+<main>
+  <section>
+    <h2>Добро пожаловать в CbIP Банк!</h2>
+    <p>Здесь можно создать игровой аккаунт и копить виртуальные Сырники.</p>
+    <p class="muted">Это шуточный проект. Сырники не являются настоящими деньгами.</p>
   </section>
 
-  <section class="card-showcase" id="my-card">
-    <h2>Наша фирменная карта</h2>
+  <section id="authPanel">
+    <h2>🔐 Аккаунт игрока</h2>
 
-    <p>Стильная карта для настоящих ценителей сыра!</p>
+    <div id="registerForm">
+      <h3>Регистрация</h3>
+      <input id="regName" placeholder="Твой игровой ник" maxlength="24">
+      <input id="regEmail" type="email" placeholder="Электронная почта">
+      <input id="regPassword" type="password" placeholder="Пароль (не менее 6 символов)">
+      <button id="registerBtn">Зарегистрироваться</button>
+    </div>
 
-    <img
-      src="cheese-card.png"
-      alt="Фирменная карта CbIP банка"
-      class="card-image"
-    >
+    <hr>
 
-    <a href="order.html" class="card-button">
-      Заказать такую карту
-    </a>
+    <div id="loginForm">
+      <h3>Вход</h3>
+      <input id="loginEmail" type="email" placeholder="Электронная почта">
+      <input id="loginPassword" type="password" placeholder="Пароль">
+      <button id="loginBtn">Войти</button>
+    </div>
+
+    <p id="message" role="status"></p>
+  </section>
+
+  <section id="accountPanel" class="hidden">
+    <h2>👤 Личный кабинет</h2>
+    <p>Привет, <strong id="playerName">Игрок</strong>!</p>
+    <p>Твой игровой баланс:</p>
+    <div class="balance"><span id="playerBalance">0</span> 🧀</div>
+    <p class="muted">Сырники — виртуальная игровая валюта.</p>
+    <button id="logoutBtn" class="secondary">Выйти из аккаунта</button>
+  </section>
+
+  <section>
+    <h2>💳 Фирменная карта CbIP банка</h2>
+    <img src="cheese-card.png" alt="Фирменная карта CbIP банка" class="card-image">
+    <a href="order.html"><button>Заказать такую карту</button></a>
   </section>
 
   <section>
     <h2>Хочешь собственную карту?</h2>
-
-    <p>
-      Выбери дизайн и создай свою виртуальную карту CbIP банка!
-    </p>
-
-    <a href="order.html" class="main-button">
-      Перейти к заказу
-    </a>
+    <p>Выбери дизайн и создай свою виртуальную карту CbIP банка!</p>
+    <a href="order.html"><button>Перейти к заказу</button></a>
   </section>
+</main>
 
-  <footer>
-    <p>© 2026 CbIP банк. Все права защищены сыром 🧀</p>
+<footer>
+  <p>© 2026 CbIP банк. Все права защищены сыром 🧀</p>
+  <p>Телефон: 8 800 555 35 35</p>
+  <p>
+    <a href="reviews.html">Отзывы</a> |
+    <a href="authors.html">Авторы</a>
+  </p>
+  <small>Шуточный проект. Не является настоящим банком.</small>
+</footer>
 
-    <p>Телефон: 8 800 555 35 35</p>
+<script type="module">
+  import { createClient } from
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    <p>
-      <a href="reviews.html">Отзывы</a>
-      <a href="authors.html">Авторы</a>
-    </p>
+  // ВСТАВЬ СЮДА СВОИ ДАННЫЕ SUPABASE
+  const SUPABASE_URL = 'https://wnyqjxhphjfosianxbwx.supabase.co
+';
+  const SUPABASE_KEY = '
+ sb_publishable_GPUoir8nN_DTr5_sBUbd3w_y56QTDc6
 
-    <small>Шуточный проект. Не является настоящим банком.</small>
-  </footer>
+';
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const $ = id => document.getElementById(id);
+
+  function showMessage(text) {
+    $('message').textContent = text;
+  }
+
+  async function loadAccount(user) {
+    if (!user) {
+      $('authPanel').classList.remove('hidden');
+      $('accountPanel').classList.add('hidden');
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('players')
+      .select('username, balance')
+      .eq('id', user.id)
+      .single();
+
+    if (error) {
+      showMessage('Не удалось загрузить профиль. Попробуй обновить страницу.');
+      return;
+    }
+
+    $('playerName').textContent = data.username;
+    $('playerBalance').textContent = data.balance;
+
+    $('authPanel').classList.add('hidden');
+    $('accountPanel').classList.remove('hidden');
+    showMessage('');
+  }
+
+  $('registerBtn').addEventListener('click', async () => {
+    const username = $('regName').value.trim();
+    const email = $('regEmail').value.trim();
+    const password = $('regPassword').value;
+
+    if (!username || !email || password.length < 6) {
+      showMessage('Заполни все поля. Пароль должен быть не короче 6 символов.');
+      return;
+    }
+
+    showMessage('Создаём аккаунт...');
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { username }
+      }
+    });
+
+    if (error) {
+      showMessage('Ошибка регистрации: ' + error.message);
+      return;
+    }
+
+    if (data.session) {
+      await loadAccount(data.user);
+    } else {
+      showMessage('Регистрация почти готова! Проверь почту и подтверди адрес, затем войди.');
+    }
+  });
+
+  $('loginBtn').addEventListener('click', async () => {
+    const email = $('loginEmail').value.trim();
+    const password = $('loginPassword').value;
+
+    showMessage('Выполняем вход...');
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      showMessage('Ошибка входа: ' + error.message);
+      return;
+    }
+
+    await loadAccount(data.user);
+  });
+
+  $('logoutBtn').addEventListener('click', async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      showMessage('Не удалось выйти: ' + error.message);
+      return;
+    }
+
+    await loadAccount(null);
+  });
+
+  supabase.auth.onAuthStateChange((_event, session) => {
+    loadAccount(session?.user ?? null);
+  });
+
+  const { data: { session } } = await supabase.auth.getSession();
+  await loadAccount(session?.user ?? null);
+</script>
 
 </body>
 </html>
+
+
+
