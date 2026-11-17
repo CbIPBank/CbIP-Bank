@@ -3,159 +3,168 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CbIP Банк — Сырники</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CbIP Банк 🧀</title>
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #fff8e8;
-      color: #392b18;
+      color: #342713;
     }
     header {
-      background: #f2c75c;
-      padding: 22px 16px;
+      background: #f2bd35;
+      padding: 22px;
       text-align: center;
     }
-    header h1 { margin: 0 0 12px; }
-    nav { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; }
-    a { color: #593d12; font-weight: bold; }
-    main { max-width: 850px; margin: 25px auto; padding: 0 16px; }
-    section, .panel {
-      background: white;
-      padding: 22px;
-      border-radius: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 3px 12px #00000012;
+    header h1 { margin: 0; font-size: 30px; }
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      padding: 14px;
+      background: #ffe5a0;
     }
+    nav a { color: #49330b; font-weight: bold; }
+    main {
+      width: min(520px, 92%);
+      margin: 30px auto;
+    }
+    .panel {
+      background: white;
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 18px;
+      box-shadow: 0 4px 15px #00000012;
+    }
+    .hidden { display: none !important; }
     h2 { margin-top: 0; }
-    input, button {
+    input {
+      display: block;
       width: 100%;
-      padding: 12px;
-      margin: 7px 0;
+      padding: 13px;
+      margin: 10px 0;
+      border: 1px solid #ddc994;
       border-radius: 9px;
       font-size: 16px;
     }
-    input { border: 1px solid #d5c49e; }
     button {
+      width: 100%;
       border: 0;
-      background: #e9b83f;
-      color: #38280b;
+      padding: 13px;
+      margin-top: 10px;
+      border-radius: 9px;
+      background: #e9ad20;
+      color: #382500;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
     }
-    button:hover { background: #f4ca60; }
-    .secondary { background: #eee6d4; }
-    .hidden { display: none; }
+    button:hover { background: #d99b0d; }
+    .secondary { background: #eee5d2; }
     .balance {
-      font-size: 34px;
+      font-size: 36px;
       font-weight: bold;
-      color: #a56b00;
+      color: #bd8500;
       text-align: center;
-      margin: 20px 0;
+      padding: 18px;
     }
-    .muted { color: #766d5d; font-size: 14px; }
-    .card-image {
-      display: block;
-      max-width: 300px;
-      width: 100%;
-      margin: 18px auto;
-      border-radius: 14px;
+    #message {
+      text-align: center;
+      margin: 15px 0;
+      overflow-wrap: anywhere;
     }
     footer {
-      background: #f2c75c;
-      padding: 22px;
       text-align: center;
-      line-height: 1.8;
+      padding: 25px;
+      color: #806b45;
     }
-    #message { white-space: pre-wrap; }
+    .admin {
+      border: 2px solid #e9ad20;
+    }
+    small { color: #766b58; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>🧀 CbIP БАНК</h1>
-  <p>Твой любимый сырный банк!</p>
-  <nav>
-    <a href="index.html">Главная</a>
-    <a href="order.html">Заказать карту</a>
-    <a href="reviews.html">Отзывы</a>
-    <a href="authors.html">Авторы</a>
-  </nav>
+  <p>Самый сырный банк интернета!</p>
 </header>
 
+<nav>
+  <a href="index.html">Главная</a>
+  <a href="order.html">Заказать</a>
+  <a href="reviews.html">Отзывы</a>
+  <a href="authors.html">Команда</a>
+</nav>
+
 <main>
-  <section>
-    <h2>Добро пожаловать в CbIP Банк!</h2>
-    <p>Здесь можно создать игровой аккаунт и копить виртуальные Сырники.</p>
-    <p class="muted">Это шуточный проект. Сырники не являются настоящими деньгами.</p>
-  </section>
+  <div class="panel">
+    <h2>Добро пожаловать в CbIP!</h2>
+    <p>Здесь хранятся твои игровые сырники 🧀</p>
+  </div>
 
-  <section id="authPanel">
-    <h2>🔐 Аккаунт игрока</h2>
+  <div class="panel" id="authPanel">
+    <h2>Вход в банк</h2>
+    <input id="loginEmail" type="email" placeholder="Электронная почта">
+    <input id="loginPassword" type="password" placeholder="Пароль">
+    <button id="loginBtn">Войти</button>
 
-    <div id="registerForm">
-      <h3>Регистрация</h3>
-      <input id="regName" placeholder="Твой игровой ник" maxlength="24">
-      <input id="regEmail" type="email" placeholder="Электронная почта">
-      <input id="regPassword" type="password" placeholder="Пароль (не менее 6 символов)">
-      <button id="registerBtn">Зарегистрироваться</button>
-    </div>
+    <hr style="border:0;border-top:1px solid #eee;margin:22px 0">
 
-    <hr>
+    <h2>Регистрация</h2>
+    <input id="regName" placeholder="Придумай ник">
+    <input id="regEmail" type="email" placeholder="Электронная почта">
+    <input id="regPassword" type="password" placeholder="Пароль (от 6 символов)">
+    <button id="registerBtn">Зарегистрироваться</button>
+  </div>
 
-    <div id="loginForm">
-      <h3>Вход</h3>
-      <input id="loginEmail" type="email" placeholder="Электронная почта">
-      <input id="loginPassword" type="password" placeholder="Пароль">
-      <button id="loginBtn">Войти</button>
-    </div>
-
-    <p id="message" role="status"></p>
-  </section>
-
-  <section id="accountPanel" class="hidden">
+  <div class="panel hidden" id="accountPanel">
     <h2>👤 Личный кабинет</h2>
     <p>Привет, <strong id="playerName">Игрок</strong>!</p>
     <p>Твой игровой баланс:</p>
-    <div class="balance"><span id="playerBalance">0</span> 🧀</div>
-    <p class="muted">Сырники — виртуальная игровая валюта.</p>
-    <button id="logoutBtn" class="secondary">Выйти из аккаунта</button>
-  </section>
+    <div class="balance">
+      <span id="playerBalance">0</span> 🧀
+    </div>
+    <button class="secondary" id="refreshBtn">Обновить баланс</button>
+    <button class="secondary" id="logoutBtn">Выйти из аккаунта</button>
+  </div>
 
-  <section>
-    <h2>💳 Фирменная карта CbIP банка</h2>
-    <img src="cheese-card.png" alt="Фирменная карта CbIP банка" class="card-image">
-    <a href="order.html"><button>Заказать такую карту</button></a>
-  </section>
+  <div class="panel admin hidden" id="adminPanel">
+    <h2>👑 Админ-панель</h2>
+    <p>Добро пожаловать, zendik!</p>
+    <p>Выдача игровых сырников</p>
 
-  <section>
-    <h2>Хочешь собственную карту?</h2>
-    <p>Выбери дизайн и создай свою виртуальную карту CbIP банка!</p>
-    <a href="order.html"><button>Перейти к заказу</button></a>
-  </section>
+    <input id="targetUsername" placeholder="Ник игрока">
+    <input id="giveAmount" type="number" min="1" step="1"
+      placeholder="Количество сырников">
+
+    <button id="giveBtn">🧀 Выдать сырники</button>
+    <small>Начисления выполняются через защищённую функцию Supabase.</small>
+  </div>
+
+  <div id="message" role="status"></div>
 </main>
 
 <footer>
-  <p>© 2026 CbIP банк. Все права защищены сыром 🧀</p>
-  <p>Телефон: 8 800 555 35 35</p>
-  <p>
-    <a href="reviews.html">Отзывы</a> |
-    <a href="authors.html">Авторы</a>
-  </p>
-  <small>Шуточный проект. Не является настоящим банком.</small>
+  CbIP Банк © 2026<br>
+  8 800 555 35 35<br>
+  Все сырники вымышленные 🧀
 </footer>
 
-<script type="module">
-  import { createClient } from
-    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-
-  // ВСТАВЬ СЮДА СВОИ ДАННЫЕ SUPABASE
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ВСТАВЬ СВОИ ДАННЫЕ SUPABASE
   const SUPABASE_URL = 'https://wnyqjxhphjfosianxbwx.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_GPUoir8nN_DTr5_sBUbd3w_y56QTDc6';
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
   const $ = id => document.getElementById(id);
 
@@ -167,17 +176,20 @@
     if (!user) {
       $('authPanel').classList.remove('hidden');
       $('accountPanel').classList.add('hidden');
+      $('adminPanel').classList.add('hidden');
       return;
     }
 
-    const { data, error } = await supabase
+    showMessage('Загружаем личный кабинет...');
+
+    const { data, error } = await db
       .from('players')
       .select('username, balance')
       .eq('id', user.id)
       .single();
 
     if (error) {
-      showMessage('Не удалось загрузить профиль. Попробуй обновить страницу.');
+      showMessage('Ошибка загрузки профиля: ' + error.message);
       return;
     }
 
@@ -186,6 +198,15 @@
 
     $('authPanel').classList.add('hidden');
     $('accountPanel').classList.remove('hidden');
+
+    // Это только отображение панели.
+    // Настоящая проверка прав выполняется на сервере Supabase.
+    if (data.username.toLowerCase() === 'zendik') {
+      $('adminPanel').classList.remove('hidden');
+    } else {
+      $('adminPanel').classList.add('hidden');
+    }
+
     showMessage('');
   }
 
@@ -195,18 +216,16 @@
     const password = $('regPassword').value;
 
     if (!username || !email || password.length < 6) {
-      showMessage('Заполни все поля. Пароль должен быть не короче 6 символов.');
+      showMessage('Заполни все поля. Пароль — минимум 6 символов.');
       return;
     }
 
     showMessage('Создаём аккаунт...');
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await db.auth.signUp({
       email,
       password,
-      options: {
-        data: { username }
-      }
+      options: { data: { username } }
     });
 
     if (error) {
@@ -217,7 +236,7 @@
     if (data.session) {
       await loadAccount(data.user);
     } else {
-      showMessage('Регистрация почти готова! Проверь почту и подтверди адрес, затем войди.');
+      showMessage('Аккаунт создан! Теперь войди в него.');
     }
   });
 
@@ -227,7 +246,7 @@
 
     showMessage('Выполняем вход...');
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await db.auth.signInWithPassword({
       email,
       password
     });
@@ -241,26 +260,71 @@
   });
 
   $('logoutBtn').addEventListener('click', async () => {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await db.auth.signOut();
 
     if (error) {
-      showMessage('Не удалось выйти: ' + error.message);
+      showMessage('Ошибка выхода: ' + error.message);
       return;
     }
 
     await loadAccount(null);
+    showMessage('Ты вышел из аккаунта.');
   });
 
-  supabase.auth.onAuthStateChange((_event, session) => {
+  $('refreshBtn').addEventListener('click', async () => {
+    const { data: { user } } = await db.auth.getUser();
+    await loadAccount(user);
+  });
+
+  $('giveBtn').addEventListener('click', async () => {
+    const username = $('targetUsername').value.trim();
+    const amount = Number($('giveAmount').value);
+
+    if (!username || !Number.isSafeInteger(amount) || amount <= 0) {
+      showMessage('Введи ник и целое положительное количество сырников.');
+      return;
+    }
+
+    $('giveBtn').disabled = true;
+    showMessage('Начисляем сырники...');
+
+    const { data, error } = await db.rpc('cbip_give_syrniki', {
+      p_username: username,
+      p_amount: amount
+    });
+
+    $('giveBtn').disabled = false;
+
+    if (error) {
+      showMessage('Не удалось выдать сырники: ' + error.message);
+      return;
+    }
+
+    showMessage(
+      'Успешно! Игроку ' + username +
+      ' начислено ' + amount +
+      ' сырников. Новый баланс: ' + data
+    );
+
+    $('targetUsername').value = '';
+    $('giveAmount').value = '';
+  });
+
+  db.auth.onAuthStateChange((_event, session) => {
     loadAccount(session?.user ?? null);
   });
 
-  const { data: { session } } = await supabase.auth.getSession();
-  await loadAccount(session?.user ?? null);
+  (async () => {
+    const { data: { session }, error } = await db.auth.getSession();
+
+    if (error) {
+      showMessage('Ошибка проверки входа: ' + error.message);
+      return;
+    }
+
+    await loadAccount(session?.user ?? null);
+  })();
 </script>
 
 </body>
 </html>
-
-
-
