@@ -1,161 +1,290 @@
-
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CbIP Банк 🧀</title>
+  <title>CbIP Банк</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 20px;
-      background: #fff7df;
-      color: #392b16;
       font-family: Arial, sans-serif;
+      background: #f3f5fa;
+      color: #202438;
     }
-    .container { max-width: 760px; margin: auto; }
     header {
+      background: #202b50;
+      color: white;
+      padding: 22px 16px;
       text-align: center;
-      padding: 24px 12px;
-      background: #f4c84b;
-      border: 3px solid #392b16;
-      border-radius: 18px;
-      margin-bottom: 20px;
     }
-    h1 { margin: 0 0 8px; font-size: 32px; }
-    .subtitle { margin: 0; }
-    .card {
+    header h1 { margin: 0 0 8px; }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px;
+      background: #fff;
+    }
+    nav a {
+      color: #24345f;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px 14px;
+      border-radius: 9px;
+      background: #edf0fa;
+    }
+    main {
+      width: min(760px, 92%);
+      margin: 24px auto;
+    }
+    section {
       background: white;
-      border: 2px solid #392b16;
+      padding: 22px;
       border-radius: 15px;
-      padding: 20px;
-      margin: 16px 0;
-      box-shadow: 3px 4px 0 #392b16;
+      margin-bottom: 18px;
+      box-shadow: 0 3px 14px #17264b12;
     }
-    h2 { margin-top: 0; }
-    input, button {
+    h2 { margin-top: 0; color: #26365f; }
+    input {
       width: 100%;
       padding: 12px;
       margin: 7px 0;
-      border-radius: 9px;
+      border: 1px solid #cbd2e2;
+      border-radius: 8px;
       font-size: 16px;
     }
-    input { border: 1px solid #aa956b; }
     button {
-      border: 2px solid #392b16;
-      background: #f4c84b;
-      font-weight: bold;
+      padding: 11px 16px;
+      margin: 6px 4px 6px 0;
+      border: 0;
+      border-radius: 8px;
+      background: #344d91;
+      color: white;
+      font-size: 15px;
       cursor: pointer;
     }
-    button:hover { background: #ffdc75; }
-    .secondary { background: #eee5d0; }
-    .hidden { display: none; }
+    button:disabled { opacity: .6; cursor: wait; }
+    .secondary { background: #68748f; }
+    .danger { background: #a83b46; }
     .balance {
       font-size: 30px;
       font-weight: bold;
-      color: #946400;
-      text-align: center;
-      padding: 12px;
+      color: #28734d;
     }
-    .transaction {
-      padding: 12px;
-      border-bottom: 1px solid #e5dcc8;
+    .muted { color: #687087; }
+    .hidden { display: none; }
+    .history-item {
+      padding: 12px 4px;
+      border-bottom: 1px solid #e7eaf1;
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      flex-wrap: wrap;
     }
-    .transaction:last-child { border-bottom: 0; }
-    .positive { color: #16833a; font-weight: bold; }
-    .muted { color: #786e5c; font-size: 13px; }
+    .positive { color: #21834f; font-weight: bold; }
+    .negative { color: #bd3c48; font-weight: bold; }
     #message { white-space: pre-wrap; }
-    footer { text-align: center; padding: 20px; color: #786e5c; }
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: #687087;
+    }
   </style>
 </head>
 <body>
-<div class="container">
 
-  <header>
-    <h1>🧀 CbIP БАНК</h1>
-    <p class="subtitle">Самый сырный банк страны!</p>
-  </header>
+<header>
+  <h1>🧀 CbIP Банк</h1>
+  <p>Самый сырный банк в интернете!</p>
+</header>
 
-  <div class="card">
-    <h2>🏦 Добро пожаловать!</h2>
-    <p>Валюта нашего банка — сырники 🧀</p>
-    <p class="muted">Это игровая валюта, не реальные деньги.</p>
-    <div id="message"></div>
-  </div>
+<nav>
+  <a href="index.html">Главная</a>
+  <a href="order.html">Заказать карту</a>
+  <a href="reviews.html">Отзывы</a>
+  <a href="authors.html">Авторы</a>
+</nav>
 
-  <section id="authSection" class="card">
-    <h2>🔐 Вход</h2>
-    <input id="loginEmail" type="email" placeholder="Электронная почта">
-    <input id="loginPassword" type="password" placeholder="Пароль">
-    <button id="loginButton">Войти</button>
-
-    <hr>
-
-    <h2>📝 Регистрация</h2>
-    <input id="regUsername" type="text" placeholder="Имя игрока">
-    <input id="regEmail" type="email" placeholder="Электронная почта">
-    <input id="regPassword" type="password" placeholder="Пароль">
-    <button id="registerButton">Зарегистрироваться</button>
+<main>
+  <section id="authSection">
+    <h2>🔐 Вход и регистрация</h2>
+    <p class="muted">Войди в аккаунт или создай новый.</p>
+    <input id="username" placeholder="Имя игрока" autocomplete="username">
+    <input id="email" type="email" placeholder="Электронная почта" autocomplete="email">
+    <input id="password" type="password" placeholder="Пароль" autocomplete="current-password">
+    <button id="registerButton" onclick="register()">Зарегистрироваться</button>
+    <button id="loginButton" onclick="login()">Войти</button>
   </section>
 
   <section id="accountSection" class="hidden">
-    <div class="card">
-      <h2>👤 Личный кабинет</h2>
-      <p>Игрок: <strong id="playerName"></strong></p>
-      <div class="balance">
-        <span id="balance">0</span> 🧀
-      </div>
-      <button id="refreshButton" class="secondary">Обновить баланс</button>
-      <button id="logoutButton" class="secondary">Выйти</button>
-    </div>
-
-    <div class="card">
-      <h2>📜 История операций</h2>
-      <p class="muted">Здесь отображаются поступления сырников на твой счёт.</p>
-      <button id="historyButton" class="secondary">Обновить историю</button>
-      <div id="historyList">Загрузка истории...</div>
-    </div>
+    <h2>👤 Личный кабинет</h2>
+    <p>Игрок: <strong id="playerName"></strong></p>
+    <p>Баланс:</p>
+    <div class="balance"><span id="balance">0</span> 🧀</div>
+    <button onclick="loadAccount()">Обновить баланс</button>
+    <button class="secondary" onclick="logout()">Выйти</button>
   </section>
 
-  <section id="adminSection" class="card hidden">
-    <h2>👑 Админ-панель</h2>
-    <p>Выдача сырников игрокам</p>
-    <input id="targetUsername" type="text" placeholder="Имя игрока">
-    <input id="giveAmount" type="number" min="1" step="1" placeholder="Количество сырников">
-    <button id="giveButton">🧀 Выдать сырники</button>
-    <p class="muted">Каждая успешная выдача автоматически попадает в историю игрока.</p>
+  <section id="transferSection" class="hidden">
+    <h2>📤 Перевод сырников</h2>
+    <p class="muted">Переводи сырники другим игрокам CbIP Банка.</p>
+    <input id="transferUsername" placeholder="Имя получателя">
+    <input id="transferAmount" type="number" min="1" step="1" placeholder="Количество сырников">
+    <button id="transferButton" onclick="transferSyrniki()">Перевести</button>
   </section>
 
-  <footer>
-    CbIP Банк © 2026<br>
-    Телефон: 8 800 555 35 35
-  </footer>
-</div>
+  <section id="historySection" class="hidden">
+    <h2>📜 История операций</h2>
+    <div id="historyList" class="muted">Загрузка...</div>
+  </section>
+
+  <section id="adminSection" class="hidden">
+    <h2>🛠️ Админ-панель</h2>
+    <p class="muted">Начисление сырников игрокам.</p>
+    <input id="adminUsername" placeholder="Имя игрока">
+    <input id="adminAmount" type="number" min="1" step="1" placeholder="Количество сырников">
+    <button id="adminButton" onclick="giveSyrniki()">Начислить сырники</button>
+  </section>
+
+  <section>
+    <h2>💳 Карта CbIP</h2>
+    <img src="cheese-card.png" alt="Карта CbIP Банка"
+         style="display:block;width:100%;max-width:380px;margin:auto;border-radius:14px;">
+  </section>
+
+  <section id="messageSection" class="hidden">
+    <p id="message"></p>
+  </section>
+</main>
+
+<footer>
+  CbIP Банк · Телефон: 8 800 555 35 35<br>
+  Все сырники — вымышленная игровая валюта 🧀
+</footer>
 
 <script>
-  // ВСТАВЬ СЮДА СВОИ ПРЕЖНИЕ ЗНАЧЕНИЯ:
+  // Вставь сюда свои Project URL и Publishable key.
   const SUPABASE_URL = 'https://wnyqjxhphjfosianxbwx.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_GPUoir8nN_DTr5_sBUbd3w_y56QTDc6';
 
-  const db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-  const $ = id => document.getElementById(id);
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   let currentUser = null;
   let currentUsername = '';
 
-  function showMessage(text, isError = false) {
-    $('message').textContent = text;
-    $('message').style.color = isError ? '#b00020' : '#16833a';
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function showMessage(message, isError = false) {
+    $('messageSection').classList.remove('hidden');
+    $('message').textContent = message;
+    $('message').style.color = isError ? '#b52e3b' : '#24764b';
+  }
+
+  function hideMessage() {
+    $('messageSection').classList.add('hidden');
+  }
+
+  async function register() {
+    hideMessage();
+
+    const username = $('username').value.trim();
+    const email = $('email').value.trim();
+    const password = $('password').value;
+
+    if (!username || !email || !password) {
+      showMessage('Заполни имя игрока, почту и пароль.', true);
+      return;
+    }
+
+    const { data, error } = await db.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { username }
+      }
+    });
+
+    if (error) {
+      showMessage('Ошибка регистрации: ' + error.message, true);
+      return;
+    }
+
+    if (data.session) {
+      showMessage('Аккаунт создан! Добро пожаловать.');
+      await checkSession();
+    } else {
+      showMessage('Аккаунт создан. Если подтверждение почты включено, проверь почту и подтверди адрес.');
+    }
+  }
+
+  async function login() {
+    hideMessage();
+
+    const email = $('email').value.trim();
+    const password = $('password').value;
+
+    if (!email || !password) {
+      showMessage('Введи почту и пароль.', true);
+      return;
+    }
+
+    const { error } = await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      showMessage('Ошибка входа: ' + error.message, true);
+      return;
+    }
+
+    showMessage('Вход выполнен!');
+    await checkSession();
+  }
+
+  async function logout() {
+    const { error } = await db.auth.signOut();
+
+    if (error) {
+      showMessage('Ошибка выхода: ' + error.message, true);
+      return;
+    }
+
+    currentUser = null;
+    currentUsername = '';
+    showLoggedOut();
+    showMessage('Ты вышел из аккаунта.');
+  }
+
+  function showLoggedOut() {
+    $('authSection').classList.remove('hidden');
+    $('accountSection').classList.add('hidden');
+    $('transferSection').classList.add('hidden');
+    $('historySection').classList.add('hidden');
+    $('adminSection').classList.add('hidden');
+  }
+
+  async function checkSession() {
+    const { data, error } = await db.auth.getSession();
+
+    if (error || !data.session) {
+      currentUser = null;
+      currentUsername = '';
+      showLoggedOut();
+      return;
+    }
+
+    currentUser = data.session.user;
+    $('authSection').classList.add('hidden');
+    $('accountSection').classList.remove('hidden');
+    $('transferSection').classList.remove('hidden');
+    $('historySection').classList.remove('hidden');
+
+    await loadAccount();
   }
 
   async function loadAccount() {
@@ -176,15 +305,13 @@
     $('playerName').textContent = data.username;
     $('balance').textContent = data.balance;
 
-    // Это только отображение панели.
-    // Настоящая проверка прав выполняется на сервере в RPC.
-    $('adminSection').classList.toggle(
-      'hidden',
-      data.username.toLowerCase() !== 'zendik'
-    );
-
-    $('authSection').classList.add('hidden');
-    $('accountSection').classList.remove('hidden');
+    // Это только отображение панели. Право начислять сырники
+    // дополнительно проверяется на сервере Supabase.
+    if (data.username === 'zendik') {
+      $('adminSection').classList.remove('hidden');
+    } else {
+      $('adminSection').classList.add('hidden');
+    }
 
     await loadHistory();
   }
@@ -192,192 +319,123 @@
   async function loadHistory() {
     if (!currentUser) return;
 
-    $('historyList').textContent = 'Загрузка...';
-
     const { data, error } = await db
       .from('syrniki_transactions')
       .select('amount, operation, created_at')
       .eq('player_id', currentUser.id)
       .order('created_at', { ascending: false })
-      .limit(50);
+      .limit(30);
+
+    const list = $('historyList');
+    list.replaceChildren();
 
     if (error) {
-      $('historyList').textContent =
-        'Не удалось загрузить историю: ' + error.message;
+      list.textContent = 'Не удалось загрузить историю: ' + error.message;
       return;
     }
 
     if (!data || data.length === 0) {
-      $('historyList').textContent = 'Операций пока нет.';
+      list.textContent = 'Операций пока нет.';
       return;
     }
 
-    $('historyList').replaceChildren();
-
-    data.forEach(item => {
+    for (const item of data) {
       const row = document.createElement('div');
-      row.className = 'transaction';
+      row.className = 'history-item';
 
-      const info = document.createElement('div');
-      const title = document.createElement('strong');
-      title.textContent = item.operation === 'admin_gift'
-        ? '🎁 Начисление сырников'
-        : 'Операция';
+      const description = document.createElement('span');
+      const amount = document.createElement('span');
+
+      if (item.operation === 'admin_gift') {
+        description.textContent = '🎁 Начисление сырников';
+        amount.textContent = '+' + item.amount + ' 🧀';
+        amount.className = 'positive';
+      } else if (item.operation === 'transfer_received') {
+        description.textContent = '📥 Получен перевод';
+        amount.textContent = '+' + item.amount + ' 🧀';
+        amount.className = 'positive';
+      } else if (item.operation === 'transfer_sent') {
+        description.textContent = '📤 Перевод игроку';
+        amount.textContent = '-' + item.amount + ' 🧀';
+        amount.className = 'negative';
+      } else {
+        description.textContent = 'Операция';
+        amount.textContent = item.amount + ' 🧀';
+      }
+
+      row.append(description, amount);
+      list.append(row);
 
       const date = document.createElement('div');
       date.className = 'muted';
+      date.style.fontSize = '12px';
+      date.style.paddingBottom = '8px';
       date.textContent = new Date(item.created_at).toLocaleString('ru-RU');
-
-      info.append(title, date);
-
-      const amount = document.createElement('span');
-      amount.className = 'positive';
-      amount.textContent = '+' + item.amount + ' 🧀';
-
-      row.append(info, amount);
-      $('historyList').append(row);
-    });
-  }
-
-  async function login() {
-    const email = $('loginEmail').value.trim();
-    const password = $('loginPassword').value;
-
-    if (!email || !password) {
-      showMessage('Заполни почту и пароль.', true);
-      return;
+      list.append(date);
     }
-
-    const { error } = await db.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      showMessage('Ошибка входа: ' + error.message, true);
-      return;
-    }
-
-    showMessage('Вход выполнен!');
-    await checkSession();
-  }
-
-  async function register() {
-    const username = $('regUsername').value.trim();
-    const email = $('regEmail').value.trim();
-    const password = $('regPassword').value;
-
-    if (!username || !email || !password) {
-      showMessage('Заполни все поля регистрации.', true);
-      return;
-    }
-
-    if (username.length < 3) {
-      showMessage('Имя игрока должно быть не короче 3 символов.', true);
-      return;
-    }
-
-    if (password.length < 6) {
-      showMessage('Пароль должен содержать минимум 6 символов.', true);
-      return;
-    }
-
-    const { data, error } = await db.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { username }
-      }
-    });
-
-    if (error) {
-      showMessage('Ошибка регистрации: ' + error.message, true);
-      return;
-    }
-
-    if (data.session) {
-      showMessage('Регистрация успешна!');
-      await checkSession();
-    } else {
-      showMessage('Аккаунт создан! Теперь войди в него.');
-    }
-  }
-
-  async function checkSession() {
-    const { data, error } = await db.auth.getSession();
-
-    if (error) {
-      showMessage(error.message, true);
-      return;
-    }
-
-    currentUser = data.session?.user || null;
-
-    if (currentUser) {
-      await loadAccount();
-    } else {
-      $('authSection').classList.remove('hidden');
-      $('accountSection').classList.add('hidden');
-      $('adminSection').classList.add('hidden');
-    }
-  }
-
-  async function logout() {
-    const { error } = await db.auth.signOut();
-
-    if (error) {
-      showMessage('Ошибка выхода: ' + error.message, true);
-      return;
-    }
-
-    currentUser = null;
-    currentUsername = '';
-    $('accountSection').classList.add('hidden');
-    $('adminSection').classList.add('hidden');
-    $('authSection').classList.remove('hidden');
-    showMessage('Ты вышел из аккаунта.');
   }
 
   async function giveSyrniki() {
     if (!currentUser) return;
 
-    const username = $('targetUsername').value.trim();
-    const amount = Number($('giveAmount').value);
+    const username = $('adminUsername').value.trim();
+    const amount = Number($('adminAmount').value);
 
     if (!username || !Number.isSafeInteger(amount) || amount <= 0) {
-      showMessage('Введи имя игрока и целое количество больше нуля.', true);
+      showMessage('Введи имя игрока и положительное целое количество.', true);
       return;
     }
 
-    $('giveButton').disabled = true;
+    $('adminButton').disabled = true;
 
     const { data, error } = await db.rpc('cbip_give_syrniki', {
       p_username: username,
       p_amount: amount
     });
 
-    $('giveButton').disabled = false;
+    $('adminButton').disabled = false;
 
     if (error) {
-      showMessage('Ошибка выдачи: ' + error.message, true);
+      showMessage('Ошибка начисления: ' + error.message, true);
       return;
     }
 
-    showMessage('Успешно! Новый баланс игрока: ' + data + ' сырников.');
-    $('targetUsername').value = '';
-    $('giveAmount').value = '';
-
-    if (username.toLowerCase() === currentUsername.toLowerCase()) {
-      await loadAccount();
-    }
+    $('adminUsername').value = '';
+    $('adminAmount').value = '';
+    showMessage('Сырники начислены! Новый баланс игрока: ' + data + ' 🧀');
+    await loadAccount();
   }
 
-  $('loginButton').addEventListener('click', login);
-  $('registerButton').addEventListener('click', register);
-  $('logoutButton').addEventListener('click', logout);
-  $('refreshButton').addEventListener('click', loadAccount);
-  $('historyButton').addEventListener('click', loadHistory);
-  $('giveButton').addEventListener('click', giveSyrniki);
+  async function transferSyrniki() {
+    if (!currentUser) return;
+
+    const username = $('transferUsername').value.trim();
+    const amount = Number($('transferAmount').value);
+
+    if (!username || !Number.isSafeInteger(amount) || amount <= 0) {
+      showMessage('Введи имя получателя и положительное целое количество.', true);
+      return;
+    }
+
+    $('transferButton').disabled = true;
+
+    const { data, error } = await db.rpc('cbip_transfer_syrniki', {
+      p_recipient_username: username,
+      p_amount: amount
+    });
+
+    $('transferButton').disabled = false;
+
+    if (error) {
+      showMessage('Ошибка перевода: ' + error.message, true);
+      return;
+    }
+
+    $('transferUsername').value = '';
+    $('transferAmount').value = '';
+    showMessage('Перевод выполнен! Твой новый баланс: ' + data + ' 🧀');
+    await loadAccount();
+  }
 
   db.auth.onAuthStateChange(() => {
     setTimeout(checkSession, 0);
@@ -385,6 +443,6 @@
 
   checkSession();
 </script>
+
 </body>
 </html>
-
