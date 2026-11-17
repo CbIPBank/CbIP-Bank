@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,7 +12,7 @@ body{margin:0;background:#101522;color:#f5f5f5;font-family:Arial,sans-serif}
 header{background:#202b42;padding:22px;text-align:center}
 header h1{margin:0;color:#ffd45c}
 nav{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:12px;background:#182237}
-button,a.nav{border:0;border-radius:9px;padding:11px 15px;background:#e5b93e;color:#171717;font-weight:bold;cursor:pointer;text-decoration:none}
+button,a.nav{border:0;border-radius:9px;padding:11px 15px;background:#e5b93e;color:#171717;font-weight:bold;cursor:pointer;text-decoration:none;margin:3px}
 button:hover,a.nav:hover{filter:brightness(1.1)}
 main{max-width:850px;margin:20px auto;padding:12px}
 .card{background:#202b42;border:1px solid #35445f;border-radius:15px;padding:18px;margin:14px 0}
@@ -25,9 +26,16 @@ input{width:100%;padding:12px;margin:7px 0;border-radius:8px;border:1px solid #5
 .good{color:#8ce99a}.bad{color:#ff8585}
 #message{padding:10px;text-align:center;white-space:pre-wrap}
 footer{text-align:center;padding:25px;color:#8995aa}
+.verified-badge{display:inline-block;color:#42a5ff;font-weight:bold;font-size:1.15em;margin-left:5px}
+.profile-overlay{display:none;position:fixed;inset:0;z-index:9999;background:#101522;overflow-y:auto;padding:20px}
+.profile-overlay.open{display:block}
+.profile-content{max-width:700px;margin:25px auto;background:#202b42;border:1px solid #465a7c;border-radius:18px;padding:24px;min-height:80vh}
+.profile-content h1{overflow-wrap:anywhere;color:#ffd45c}
+.profile-stat{background:#172238;border-radius:10px;padding:13px;margin:9px 0}
 </style>
 </head>
 <body>
+
 <header>
   <h1>🧀 CbIP БАНК</h1>
   <p>Самый сырный банк виртуальной валюты!</p>
@@ -52,12 +60,13 @@ footer{text-align:center;padding:25px;color:#8995aa}
     <button onclick="register()">Регистрация</button>
     <button onclick="login()">Войти</button>
   </div>
-  <p class="small">Используй только свой аккаунт. Валюта здесь игровая.</p>
+  <p class="small">Используй только свой аккаунт. Сырники — игровая валюта проекта.</p>
 </section>
 
 <section class="card hidden" id="account">
   <h2>👤 Мой аккаунт</h2>
-  <p>Игрок: <b id="myName">—</b></p>
+  <p>Игрок: <b id="myName">—</b> <span id="myVerified"></span></p>
+  <p id="myVerifiedText" class="small"></p>
   <p>Игровой ID: <b id="myCode">—</b></p>
   <p>Баланс: <b id="balance">0</b> 🧀 Сырников</p>
   <p>Дата регистрации: <span id="created">—</span></p>
@@ -105,7 +114,6 @@ footer{text-align:center;padding:25px;color:#8995aa}
   <input id="searchName" placeholder="Введи часть никнейма">
   <button onclick="searchPlayers()">Поиск</button>
   <div id="searchResults"></div>
-  <div id="publicProfile"></div>
 </section>
 
 <section class="card hidden" id="history">
@@ -119,8 +127,24 @@ footer{text-align:center;padding:25px;color:#8995aa}
   <input id="adminUser" placeholder="Ник игрока">
   <input id="adminAmount" type="number" min="1" placeholder="Количество">
   <button onclick="giveSyrniki()">Выдать сырники</button>
+
+  <hr>
+  <h3>🔵 Подтверждение аккаунта</h3>
+  <input id="verifyUser" placeholder="Ник игрока">
+  <div class="row">
+    <button onclick="setVerified(true)">Выдать галочку ✓</button>
+    <button onclick="setVerified(false)">Снять галочку</button>
+  </div>
+  <p class="small">Подтверждение выдаётся только через серверную проверку прав администратора.</p>
 </section>
 </main>
+
+<div id="profileOverlay" class="profile-overlay">
+  <div class="profile-content">
+    <button onclick="closePublicProfile()">← Назад к сайту</button>
+    <div id="fullProfile"></div>
+  </div>
+</div>
 
 <footer>
   CbIP Банк © Игровой проект<br>
@@ -135,7 +159,7 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
 let player = null;
 
-function msg(text, error=false){
+function msg(text,error=false){
   const el=document.getElementById("message");
   el.textContent=text;
   el.className=error?"bad":"good";
@@ -149,21 +173,36 @@ function safe(value){
   })[c]);
 }
 function money(n){return Number(n||0).toLocaleString("ru-RU");}
+function verifiedMark(verified){
+  if(!verified)return "";
+  const span=document.createElement("span");
+  span.className="verified-badge";
+  span.textContent="✓";
+  span.title="Официально подтверждён CbIP Банком";
+  return span;
+}
 
 async function register(){
   const username=document.getElementById("username").value.trim();
   const email=document.getElementById("email").value.trim();
   const password=document.getElementById("password").value;
-  if(username.length<3){msg("Ник должен содержать минимум 3 символа",true);return;}
-  if(!email||password.length<6){msg("Проверь email и пароль (минимум 6 символов)",true);return;}
+
+  if(username.length<3){
+    msg("Ник должен содержать минимум 3 символа",true);return;
+  }
+  if(!email||password.length<6){
+    msg("Проверь email и пароль (минимум 6 символов)",true);return;
+  }
 
   const {data,error}=await db.auth.signUp({
     email,password,options:{data:{username}}
   });
   if(error){msg(error.message,true);return;}
-  if(data.user){
-    msg("Регистрация выполнена! Теперь войди в аккаунт.");
-    if(data.session) await loadAccount();
+  if(data.session){
+    msg("Регистрация выполнена!");
+    await loadAccount();
+  }else{
+    msg("Регистрация отправлена. Теперь войди в аккаунт.");
   }
 }
 
@@ -178,6 +217,7 @@ async function login(){
 async function logout(){
   await db.auth.signOut();
   currentUser=null;player=null;
+  closePublicProfile();
   ["account","daily","transfer","shop","myPurchases","referrals","search","history","admin"]
     .forEach(id=>show(id,false));
   show("auth",true);
@@ -189,58 +229,108 @@ async function loadAccount(){
   if(!user)return;
   currentUser=user;
 
-  const {data,error}=await db.from("players").select("*").eq("id",user.id).single();
-  if(error){msg("Не удалось загрузить профиль: "+error.message,true);return;}
+  const {data,error}=await db.from("players")
+    .select("*").eq("id",user.id).single();
+
+  if(error){
+    msg("Не удалось загрузить профиль: "+error.message,true);return;
+  }
   player=data;
 
   show("auth",false);
-  ["account","daily","transfer","shop","myPurchases","referrals","search","history"].forEach(id=>show(id,true));
+  ["account","daily","transfer","shop","myPurchases","referrals","search","history"]
+    .forEach(id=>show(id,true));
+
+  // Видимость панели — только интерфейс. Сервер отдельно проверяет права.
   show("admin",player.username.toLowerCase()==="zendik");
 
   document.getElementById("myName").textContent=player.username;
+  document.getElementById("myVerified").replaceChildren(verifiedMark(player.verified));
+  document.getElementById("myVerifiedText").textContent=
+    player.verified?"🔵 Официально подтверждён CbIP Банком":"";
   document.getElementById("myCode").textContent=player.public_code||"—";
   document.getElementById("balance").textContent=money(player.balance);
-  document.getElementById("created").textContent=new Date(player.created_at).toLocaleDateString("ru-RU");
+  document.getElementById("created").textContent=
+    new Date(player.created_at).toLocaleDateString("ru-RU");
   document.getElementById("streak").textContent=player.daily_streak||0;
   document.getElementById("bestStreak").textContent=player.best_streak||0;
   document.getElementById("refCode").textContent=player.referral_code||"—";
-  document.getElementById("refLink").value=location.origin+location.pathname+"?ref="+encodeURIComponent(player.referral_code||"");
+  document.getElementById("refLink").value=
+    location.origin+location.pathname+"?ref="+encodeURIComponent(player.referral_code||"");
 
-  await Promise.all([loadDaily(),loadShop(),loadPurchases(),loadHistory()]);
+  await Promise.all([
+    loadDaily(),loadShop(),loadPurchases(),loadHistory()
+  ]);
   await applyReferralFromUrl();
 }
 
 async function refreshBalance(){
-  const {data}=await db.from("players").select("*").eq("id",currentUser.id).single();
-  if(data){
-    player=data;
-    document.getElementById("balance").textContent=money(data.balance);
-    document.getElementById("streak").textContent=data.daily_streak||0;
-    document.getElementById("bestStreak").textContent=data.best_streak||0;
-  }
+  const {data,error}=await db.from("players")
+    .select("*").eq("id",currentUser.id).single();
+
+  if(error||!data)return;
+  player=data;
+
+  document.getElementById("balance").textContent=money(data.balance);
+  document.getElementById("streak").textContent=data.daily_streak||0;
+  document.getElementById("bestStreak").textContent=data.best_streak||0;
+  document.getElementById("myVerified").replaceChildren(verifiedMark(data.verified));
+  document.getElementById("myVerifiedText").textContent=
+    data.verified?"🔵 Официально подтверждён CbIP Банком":"";
 }
 
 async function sendTransfer(){
   const username=document.getElementById("recipient").value.trim();
   const amount=Number(document.getElementById("transferAmount").value);
-  if(!username||!Number.isInteger(amount)||amount<=0){msg("Проверь ник и сумму",true);return;}
+
+  if(!username||!Number.isInteger(amount)||amount<=0){
+    msg("Проверь ник и сумму",true);return;
+  }
+
   const {data,error}=await db.rpc("cbip_transfer_syrniki",{
     p_recipient_username:username,p_amount:amount
   });
+
   if(error){msg(error.message,true);return;}
   msg("Перевод выполнен! Остаток: "+money(data));
-  await refreshBalance();await loadHistory();
+  await refreshBalance();
+  await loadHistory();
 }
 
 async function giveSyrniki(){
   const username=document.getElementById("adminUser").value.trim();
   const amount=Number(document.getElementById("adminAmount").value);
-  if(!username||!Number.isInteger(amount)||amount<=0){msg("Проверь ник и сумму",true);return;}
+
+  if(!username||!Number.isInteger(amount)||amount<=0){
+    msg("Проверь ник и сумму",true);return;
+  }
+
   const {data,error}=await db.rpc("cbip_give_syrniki",{
     p_username:username,p_amount:amount
   });
+
   if(error){msg(error.message,true);return;}
   msg("Сырники выданы. Новый баланс игрока: "+money(data));
+}
+
+async function setVerified(value){
+  const username=document.getElementById("verifyUser").value.trim();
+  if(!username){msg("Введи ник игрока",true);return;}
+
+  const {data,error}=await db.rpc("cbip_set_verified",{
+    p_username:username,p_verified:value
+  });
+
+  if(error){msg(error.message,true);return;}
+
+  msg(value
+    ?"🔵 Аккаунт "+username+" подтверждён!"
+    :"Подтверждение аккаунта "+username+" снято.");
+
+  await searchPlayers();
+  if(player && player.username.toLowerCase()===username.toLowerCase()){
+    await refreshBalance();
+  }
 }
 
 async function loadDaily(){
@@ -248,39 +338,58 @@ async function loadDaily(){
     .select("claim_date,day_number,amount")
     .eq("player_id",currentUser.id)
     .order("claim_date",{ascending:false}).limit(1);
-  if(error){document.getElementById("dailyInfo").textContent=error.message;return;}
+
+  if(error){
+    document.getElementById("dailyInfo").textContent=error.message;return;
+  }
+
   if(data&&data.length){
     document.getElementById("dailyInfo").textContent=
-      "Последняя награда: день "+data[0].day_number+" — "+data[0].amount+" сырников. Забрать можно раз в день.";
+      "Последняя награда: день "+data[0].day_number+
+      " — "+data[0].amount+" сырников. Забрать можно раз в день.";
   }else{
-    document.getElementById("dailyInfo").textContent="Твоя первая награда уже ждёт!";
+    document.getElementById("dailyInfo").textContent=
+      "Твоя первая награда уже ждёт!";
   }
 }
 
 async function claimDaily(){
   const {data,error}=await db.rpc("cbip_claim_daily_reward");
   if(error){msg(error.message,true);return;}
-  msg("Получено "+data.reward+" 🧀! День "+data.day+". Стрик: "+data.streak);
-  await refreshBalance();await loadDaily();await loadHistory();
+
+  msg("Получено "+data.reward+" 🧀! День "+data.day+
+      ". Стрик: "+data.streak);
+
+  await refreshBalance();
+  await loadDaily();
+  await loadHistory();
 }
 
 async function loadShop(){
-  const {data,error}=await db.from("shop_items").select("*").eq("active",true).order("price");
+  const {data,error}=await db.from("shop_items")
+    .select("*").eq("active",true).order("price");
+
   const el=document.getElementById("shopItems");
   if(error){el.textContent=error.message;return;}
-  el.innerHTML="";
+  el.replaceChildren();
+
   for(const item of data||[]){
     const div=document.createElement("div");
     div.className="item";
+
     const title=document.createElement("b");
     title.textContent=item.icon+" "+item.name;
+
     const desc=document.createElement("p");
     desc.textContent=item.description;
+
     const price=document.createElement("p");
     price.textContent=money(item.price)+" 🧀";
+
     const btn=document.createElement("button");
     btn.textContent="Купить";
     btn.onclick=()=>buyItem(item.slug);
+
     div.append(title,desc,price,btn);
     el.append(div);
   }
@@ -289,21 +398,33 @@ async function loadShop(){
 async function buyItem(slug){
   const {data,error}=await db.rpc("cbip_buy_item",{p_slug:slug});
   if(error){msg(error.message,true);return;}
+
   msg("Покупка успешна! Остаток: "+money(data.balance)+" 🧀");
-  await refreshBalance();await loadPurchases();await loadHistory();
+  await refreshBalance();
+  await loadPurchases();
+  await loadHistory();
 }
 
 async function loadPurchases(){
   const {data,error}=await db.from("player_purchases")
     .select("purchased_at,shop_items(name,icon)")
-    .eq("player_id",currentUser.id).order("purchased_at",{ascending:false});
+    .eq("player_id",currentUser.id)
+    .order("purchased_at",{ascending:false});
+
   const el=document.getElementById("purchases");
   if(error){el.textContent=error.message;return;}
-  el.innerHTML="";
-  if(!data?.length){el.textContent="Пока покупок нет.";return;}
+  el.replaceChildren();
+
+  if(!data?.length){
+    el.textContent="Пока покупок нет.";return;
+  }
+
   data.forEach(p=>{
-    const div=document.createElement("div");div.className="item";
-    div.textContent=(p.shop_items?.icon||"🎁")+" "+(p.shop_items?.name||"Товар")+" — "+new Date(p.purchased_at).toLocaleDateString("ru-RU");
+    const div=document.createElement("div");
+    div.className="item";
+    div.textContent=(p.shop_items?.icon||"🎁")+" "+
+      (p.shop_items?.name||"Товар")+" — "+
+      new Date(p.purchased_at).toLocaleDateString("ru-RU");
     el.append(div);
   });
 }
@@ -311,14 +432,19 @@ async function loadPurchases(){
 async function loadHistory(){
   const {data,error}=await db.from("syrniki_transactions")
     .select("amount,operation,created_at")
-    .eq("player_id",currentUser.id).order("created_at",{ascending:false}).limit(30);
+    .eq("player_id",currentUser.id)
+    .order("created_at",{ascending:false}).limit(30);
+
   const el=document.getElementById("historyItems");
   if(error){el.textContent=error.message;return;}
-  el.innerHTML="";
-  if(!data?.length){el.textContent="Операций пока нет.";return;}
+  el.replaceChildren();
+
+  if(!data?.length){
+    el.textContent="Операций пока нет.";return;
+  }
+
   data.forEach(t=>{
     const debit=["transfer_sent","shop_purchase"].includes(t.operation);
-    const div=document.createElement("div");div.className="item";
     const label={
       admin_gift:"🎁 Начисление админом",
       transfer_sent:"↗️ Перевод отправлен",
@@ -327,80 +453,165 @@ async function loadHistory(){
       referral_bonus:"🤝 Реферальный бонус",
       shop_purchase:"🛍️ Покупка в магазине"
     }[t.operation]||t.operation;
-    div.textContent=label+" · "+(debit?"−":"+")+money(t.amount)+" 🧀 · "+new Date(t.created_at).toLocaleString("ru-RU");
+
+    const div=document.createElement("div");
+    div.className="item";
+    div.textContent=label+" · "+(debit?"−":"+")+
+      money(t.amount)+" 🧀 · "+
+      new Date(t.created_at).toLocaleString("ru-RU");
     el.append(div);
   });
 }
 
 async function copyReferral(){
   const value=document.getElementById("refLink").value;
-  try{await navigator.clipboard.writeText(value);msg("Ссылка скопирована!");}
-  catch(e){document.getElementById("refLink").select();msg("Выдели и скопируй ссылку.");}
+  try{
+    await navigator.clipboard.writeText(value);
+    msg("Ссылка скопирована!");
+  }catch(e){
+    document.getElementById("refLink").select();
+    msg("Выдели и скопируй ссылку.");
+  }
 }
 
 async function applyReferralFromUrl(){
   const code=new URLSearchParams(location.search).get("ref");
   if(!code||!currentUser)return;
+
   const {error}=await db.rpc("cbip_apply_referral",{p_code:code});
+
   if(error){
-    if(!error.message.includes("уже"))msg("Реферальный бонус: "+error.message,true);
+    if(!error.message.toLowerCase().includes("уже")){
+      msg("Реферальный бонус: "+error.message,true);
+    }
   }else{
     msg("Реферальный бонус получен: тебе начислено 100 🧀!");
-    await refreshBalance();await loadHistory();
+    await refreshBalance();
+    await loadHistory();
   }
+
   history.replaceState({},document.title,location.pathname);
 }
 
 async function searchPlayers(){
   const query=document.getElementById("searchName").value.trim();
   const el=document.getElementById("searchResults");
-  document.getElementById("publicProfile").innerHTML="";
-  if(query.length<2){msg("Введи хотя бы 2 символа",true);return;}
+
+  if(query.length<2){
+    msg("Введи хотя бы 2 символа",true);return;
+  }
+
   const {data,error}=await db.rpc("cbip_search_players",{p_query:query});
   if(error){msg(error.message,true);return;}
-  el.innerHTML="";
-  if(!data?.length){el.textContent="Игроки не найдены.";return;}
-  data.forEach(p=>{
-    const div=document.createElement("div");div.className="item";
-    const name=document.createElement("b");name.textContent=p.username+" · ID "+p.public_code;
-    const profile=document.createElement("button");profile.textContent="Профиль";
-    profile.onclick=()=>openPublicProfile(p.username);
-    const transfer=document.createElement("button");transfer.textContent="Перевести";
-    transfer.onclick=()=>{document.getElementById("recipient").value=p.username;document.getElementById("transferAmount").focus();};
-    div.append(name,document.createElement("br"),profile,transfer);el.append(div);
-  });
+
+  el.replaceChildren();
+
+  if(!data?.length){
+    el.textContent="Игроки не найдены.";return;
+  }
+
+  for(const p of data){
+    const div=document.createElement("div");
+    div.className="item";
+
+    const name=document.createElement("b");
+    name.textContent=p.username+" · ID "+(p.public_code||"—");
+
+    const {data:profile}=await db.rpc(
+      "cbip_get_public_profile",{p_username:p.username}
+    );
+    if(profile?.verified)name.append(verifiedMark(true));
+
+    const profileBtn=document.createElement("button");
+    profileBtn.textContent="Открыть профиль";
+    profileBtn.onclick=()=>openPublicProfile(p.username);
+
+    const transferBtn=document.createElement("button");
+    transferBtn.textContent="Перевести";
+    transferBtn.onclick=()=>{
+      document.getElementById("recipient").value=p.username;
+      document.getElementById("transferAmount").focus();
+    };
+
+    div.append(name,document.createElement("br"),profileBtn,transferBtn);
+    el.append(div);
+  }
 }
 
 async function openPublicProfile(username){
-  const {data,error}=await db.rpc("cbip_get_public_profile",{p_username:username});
-  const el=document.getElementById("publicProfile");
-  if(error||!data){el.textContent=error?.message||"Профиль не найден";return;}
-  el.innerHTML="";
-  const box=document.createElement("div");box.className="item";
+  const {data,error}=await db.rpc(
+    "cbip_get_public_profile",{p_username:username}
+  );
+
+  if(error||!data){
+    msg(error?.message||"Профиль не найден",true);return;
+  }
+
+  const el=document.getElementById("fullProfile");
+  el.replaceChildren();
+
+  const title=document.createElement("h1");
+  title.textContent=data.username;
+  if(data.verified)title.append(verifiedMark(true));
+  el.append(title);
+
+  const status=document.createElement("p");
+  status.className=data.verified?"good":"small";
+  status.textContent=data.verified
+    ?"🔵 Официально подтверждён CbIP Банком"
+    :"Аккаунт пока не подтверждён";
+  el.append(status);
+
   const fields=[
-    ["Игрок",data.username],["Игровой ID",data.public_code],
-    ["Регистрация",new Date(data.created_at).toLocaleDateString("ru-RU")],
+    ["Игровой ID",data.public_code],
+    ["Дата регистрации",new Date(data.created_at).toLocaleDateString("ru-RU")],
     ["Отправлено переводов",data.sent_count],
     ["Получено переводов",data.received_count],
     ["Покупок",data.purchases_count],
     ["Текущий стрик",data.daily_streak],
     ["Лучший стрик",data.best_streak]
   ];
-  fields.forEach(([k,v])=>{
-    const p=document.createElement("p");p.textContent=k+": "+(v??0);box.append(p);
+
+  fields.forEach(([key,value])=>{
+    const div=document.createElement("div");
+    div.className="profile-stat";
+    const b=document.createElement("b");
+    b.textContent=key+": ";
+    const span=document.createElement("span");
+    span.textContent=value??0;
+    div.append(b,span);
+    el.append(div);
   });
-  const btn=document.createElement("button");btn.textContent="Перевести этому игроку";
-  btn.onclick=()=>{document.getElementById("recipient").value=data.username;document.getElementById("transferAmount").focus();};
-  box.append(btn);el.append(box);
+
+  const transferBtn=document.createElement("button");
+  transferBtn.textContent="💸 Перевести этому игроку";
+  transferBtn.onclick=()=>{
+    document.getElementById("recipient").value=data.username;
+    closePublicProfile();
+    document.getElementById("transferAmount").focus();
+  };
+  el.append(transferBtn);
+
+  document.getElementById("profileOverlay").classList.add("open");
+}
+
+function closePublicProfile(){
+  document.getElementById("profileOverlay").classList.remove("open");
 }
 
 async function init(){
   const {data:{session}}=await db.auth.getSession();
   if(session)await loadAccount();
 }
+
 db.auth.onAuthStateChange((_event,session)=>{
   if(session&&!currentUser)setTimeout(loadAccount,0);
+  if(!session&&currentUser){
+    currentUser=null;
+    player=null;
+  }
 });
+
 init();
 </script>
 </body>
