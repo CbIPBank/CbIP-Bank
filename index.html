@@ -30,7 +30,29 @@ input::placeholder{color:#a58c5a}
 .bad{color:#c0392b}
 #message{padding:10px;text-align:center;white-space:pre-wrap;font-weight:bold}
 footer{text-align:center;padding:25px;color:#94712d;background:#ffedb0;border-top:2px solid #e9c34f}
-.verified-badge{display:inline-block;color:#168be0;font-weight:bold;font-size:1.2em;margin-left:5px}
+
+/* Новая галочка CbIP в стиле X */
+.verified-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:18px;
+  height:18px;
+  margin-left:5px;
+  background:#168be0;
+  color:white;
+  font-size:12px;
+  font-weight:900;
+  line-height:1;
+  clip-path:polygon(
+    50% 0%,62% 12%,80% 8%,86% 26%,
+    100% 38%,91% 54%,96% 73%,
+    77% 80%,65% 100%,50% 88%,
+    35% 100%,23% 80%,4% 73%,
+    9% 54%,0% 38%,14% 26%,20% 8%,38% 12%
+  );
+}
+
 .profile-overlay{display:none;position:fixed;inset:0;z-index:9999;background:#fff8dc;overflow-y:auto;padding:20px}
 .profile-overlay.open{display:block}
 .profile-content{max-width:700px;margin:25px auto;background:#fffdf3;border:2px solid #e8c65b;border-radius:20px;padding:24px;min-height:80vh;box-shadow:0 8px 25px #b58a2c33}
@@ -697,4 +719,3 @@ init();
 </script>
 </body>
 </html>
-
