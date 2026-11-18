@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -556,12 +557,12 @@ async function openPublicProfile(username){
   if(data.verified)title.append(verifiedMark(true));
   el.append(title);
 
-  const status=document.createElement("p");
-  status.className=data.verified?"good":"small";
-  status.textContent=data.verified
+  const profileStatus=document.createElement("p");
+  profileStatus.className=data.verified?"good":"small";
+  profileStatus.textContent=data.verified
     ?"🔵 Официально подтверждён CbIP Банком"
     :"Аккаунт пока не подтверждён";
-  el.append(status);
+  el.append(profileStatus);
 
   const fields=[
     ["Игровой ID",data.public_code],
@@ -596,7 +597,7 @@ async function openPublicProfile(username){
   };
   el.append(transferBtn);
 
-  // Кнопка подтверждения доступна только в открытом профиле.
+  // Кнопка подтверждения доступна только администратору.
   if(player&&player.username.toLowerCase()==="zendik"){
     const adminBox=document.createElement("div");
     adminBox.className="profile-stat";
@@ -610,43 +611,71 @@ async function openPublicProfile(username){
       ?"🔵 Снять галочку"
       :"✓ Выдать галочку";
 
+    const verifyStatus=document.createElement("p");
+    verifyStatus.className="small";
+    verifyStatus.style.whiteSpace="pre-wrap";
+    verifyStatus.setAttribute("aria-live","polite");
+
     verifyBtn.onclick=()=>setVerified(
-      data.username,!data.verified,verifyBtn
+      data.username,!data.verified,verifyBtn,verifyStatus
     );
 
-    adminBox.append(verifyBtn);
+    adminBox.append(verifyBtn,verifyStatus);
     el.append(adminBox);
   }
 
   document.getElementById("profileOverlay").classList.add("open");
 }
 
-async function setVerified(username,value,button){
+async function setVerified(username,value,button,status){
+  const showStatus=(text,isError=false)=>{
+    if(status){
+      status.textContent=text;
+      status.className=isError?"bad":"good";
+    }
+    msg(text,isError);
+  };
+
   if(!player||player.username.toLowerCase()!=="zendik"){
-    msg("Нет прав администратора",true);
+    showStatus(
+      "Нет прав администратора. Проверь, что аккаунт zendik добавлен в cbip_admins.",
+      true
+    );
     return;
   }
 
   button.disabled=true;
+  button.textContent="Сохранение...";
 
-  const {error}=await db.rpc("cbip_set_verified",{
-    p_username:username,
-    p_verified:value
-  });
+  try{
+    const {error}=await db.rpc("cbip_set_verified",{
+      p_username:username,
+      p_verified:value
+    });
 
-  button.disabled=false;
+    if(error) throw error;
 
-  if(error){
-    msg(error.message,true);
-    return;
+    showStatus(value
+      ?"🔵 Аккаунт "+username+" подтверждён!"
+      :"Подтверждение аккаунта "+username+" снято!");
+
+    await refreshBalance();
+    await openPublicProfile(username);
+
+  }catch(error){
+    console.error("Ошибка cbip_set_verified:",error);
+
+    showStatus(
+      "Не удалось изменить галочку: "+
+      (error.message||String(error)),
+      true
+    );
+
+    button.disabled=false;
+    button.textContent=value
+      ?"✓ Выдать галочку"
+      :"🔵 Снять галочку";
   }
-
-  msg(value
-    ?"🔵 Аккаунт "+username+" подтверждён!"
-    :"Подтверждение аккаунта "+username+" снято!");
-
-  await openPublicProfile(username);
-  await refreshBalance();
 }
 
 function closePublicProfile(){
