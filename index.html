@@ -1,5 +1,4 @@
-
-
+async function copyRef
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -45,13 +44,19 @@ footer{text-align:center;padding:25px;color:#94712d;background:#ffedb0;border-to
 </style>
 </head>
 <body>
-<header><h1>🧀 CbIP БАНК</h1><p>Самый сырный банк виртуальной валюты!</p></header>
+
+<header>
+<h1>🧀 CbIP БАНК</h1>
+<p>Самый сырный банк виртуальной валюты!</p>
+</header>
+
 <nav>
 <a class="nav" href="index.html">Главная</a>
 <a class="nav" href="order.html">Заказы</a>
 <a class="nav" href="reviews.html">Отзывы</a>
 <a class="nav" href="authors.html">Авторы</a>
 </nav>
+
 <main>
 <div id="message"></div>
 
@@ -81,7 +86,7 @@ footer{text-align:center;padding:25px;color:#94712d;background:#ffedb0;border-to
 
 <section class="card hidden" id="daily">
 <h2>🎁 Ежедневная награда</h2>
-<p>Забирай награду каждый день. Если пропустишь день, стрик начнётся заново.</p>
+<p>Забирай награду каждый день.</p>
 <p id="dailyInfo">Загрузка...</p>
 <button onclick="claimDaily()">Забрать награду</button>
 <p class="small">После 30-го дня награды повторяются с первого дня.</p>
@@ -146,11 +151,7 @@ footer{text-align:center;padding:25px;color:#94712d;background:#ffedb0;border-to
 <div id="activeChat" class="item hidden">
 <h3 id="activeChatTitle">Чат</h3>
 <div id="chatMessages" aria-live="polite"></div>
-
-<textarea id="chatMessageInput"
-rows="3" maxlength="3000"
-placeholder="Напиши сообщение..."></textarea>
-
+<textarea id="chatMessageInput" rows="3" maxlength="3000" placeholder="Напиши сообщение..."></textarea>
 <button onclick="sendChatMessage()">Отправить</button>
 
 <div id="chatInvite" class="hidden">
@@ -258,6 +259,11 @@ msg("Регистрация отправлена. Теперь войди в а�
 async function login(){
 const email=document.getElementById("email").value.trim();
 const password=document.getElementById("password").value;
+
+if(!email||!password){
+msg("Введи email и пароль",true);
+return;
+}
 
 const {error}=await db.auth.signInWithPassword({email,password});
 
@@ -496,6 +502,7 @@ el.append(div);
 });
 }
 
+/* ИСПРАВЛЕННАЯ ФУНКЦИЯ ИСТОРИИ */
 async function loadHistory(){
 const {data,error}=await db.from("syrniki_transactions")
 .select("amount,operation,created_at")
@@ -532,12 +539,12 @@ shop_purchase:"🛍️ Покупка в магазине"
 const div=document.createElement("div");
 div.className="item";
 div.textContent=label+" · "+(debit?"−":"+")+money(t.amount)+" 🧀 · "+new Date(t.created_at).toLocaleString("ru-RU");
+
 el.append(div);
+});
 }
 
-/* =========================
-   ЧАТЫ, ГРУППЫ И КАНАЛЫ
-========================= */
+/* ЧАТЫ */
 
 async function loadChats(){
 const el=document.getElementById("chatList");
@@ -571,7 +578,6 @@ const name=chat.peer_username||chat.room_name||"Без названия";
 btn.textContent=typeLabel+" · "+name+(chat.last_message?" — "+chat.last_message:"");
 btn.style.display="block";
 btn.style.width="100%";
-
 btn.onclick=()=>openChat(chat.room_id,name,chat.room_type);
 
 el.append(btn);
@@ -583,7 +589,6 @@ activeChatId=roomId;
 activeChatType=roomType;
 
 document.getElementById("activeChatTitle").textContent=roomName;
-
 show("activeChat",true);
 show("chatInvite",roomType==="group"||roomType==="channel");
 
@@ -669,7 +674,6 @@ return;
 }
 
 input.value="";
-
 msg(type==="group"?"Группа создана!":"Канал создан!");
 
 await loadChats();
@@ -737,11 +741,9 @@ activeChatType
 await loadChats();
 }
 
-/* =========================
-   РЕФЕРАЛЬНАЯ ПРОГРАММА
-========================= */
+/* РЕФЕРАЛЬНАЯ ПРОГРАММА */
 
-async function copyReferral(){
+erral(){
 const value=document.getElementById("refLink").value;
 
 try{
@@ -775,9 +777,7 @@ await loadHistory();
 history.replaceState({},document.title,location.pathname);
 }
 
-/* =========================
-   ПОИСК И ПРОФИЛИ ИГРОКОВ
-========================= */
+/* ПОИСК И ПРОФИЛИ */
 
 async function searchPlayers(){
 const query=document.getElementById("searchName").value.trim();
@@ -906,7 +906,6 @@ adminBox.className="profile-stat";
 
 const heading=document.createElement("h3");
 heading.textContent="👑 Управление подтверждением";
-
 adminBox.append(heading);
 
 const verifyBtn=document.createElement("button");
@@ -941,7 +940,7 @@ msg(text,isError);
 };
 
 if(!player||player.username.toLowerCase()!=="zendik"){
-showStatus("Нет прав администратора. Проверь, что аккаунт zendik добавлен в cbip_admins.",true);
+showStatus("Нет прав администратора. Проверь права администратора.",true);
 return;
 }
 
